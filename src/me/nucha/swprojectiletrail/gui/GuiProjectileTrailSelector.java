@@ -1,8 +1,5 @@
 package me.nucha.swprojectiletrail.gui;
 
-import me.nucha.swprojectiletrail.manager.ProjectileTrailManager;
-import me.nucha.swprojectiletrail.utils.CustomItem;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -14,6 +11,9 @@ import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import me.nucha.swprojectiletrail.manager.ProjectileTrailManager;
+import me.nucha.swprojectiletrail.utils.CustomItem;
+
 public class GuiProjectileTrailSelector implements Listener {
 
 	private ProjectileTrailManager trailManager;
@@ -24,27 +24,59 @@ public class GuiProjectileTrailSelector implements Listener {
 
 	public void open(Player p) {
 		Inventory inventory = Bukkit.createInventory(null, 54, "Projectile Trails");
-		ItemStack VANILLA = new CustomItem(trailManager.getProjectileTrailById("VANILLA").getIcon(), 1,
+		ItemStack VANILLA_YES = new CustomItem(trailManager.getProjectileTrailById("VANILLA").getIcon(), 1,
 				"§aVanilla Trail",
 				"§7Select the Vanilla Trail.",
 				"§7This change is cosmetic.",
 				(!trailManager.hasSelected(p, "VANILLA") ? "§eClick to select!" : "§aSELECTED!"));
-		ItemStack HEARTS = new CustomItem(trailManager.getProjectileTrailById("HEARTS").getIcon(), 1,
+		ItemStack HEARTS_YES = new CustomItem(trailManager.getProjectileTrailById("HEARTS").getIcon(), 1,
 				"§aHearts Trail",
 				"§7Select the Hearts Trail.",
 				"§7This change is cosmetic.",
 				(!trailManager.hasSelected(p, "HEARTS") ? "§eClick to select!" : "§aSELECTED!"));
-		ItemStack NOTES = new CustomItem(trailManager.getProjectileTrailById("NOTES").getIcon(), 1,
+		ItemStack NOTES_YES = new CustomItem(trailManager.getProjectileTrailById("NOTES").getIcon(), 1,
 				"§aNotes Trail",
 				"§7Select the Notes Trail.",
 				"§7This change is cosmetic.",
 				(!trailManager.hasSelected(p, "NOTES") ? "§eClick to select!" : "§aSELECTED!"));
-		ItemStack GREEN_STAR = new CustomItem(trailManager.getProjectileTrailById("GREEN_STAR").getIcon(), 1,
+		ItemStack GREEN_STAR_YES = new CustomItem(trailManager.getProjectileTrailById("GREEN_STAR").getIcon(), 1,
 				"§aGreen Star Trail",
 				"§7Select the Green Star Trail.",
 				"§7This change is cosmetic.",
 				(!trailManager.hasSelected(p, "GREEN_STAR") ? "§eClick to select!" : "§aSELECTED!"));
+
+		ItemStack VANILLA_NO = new CustomItem(trailManager.getProjectileTrailById("VANILLA").getIcon(), 1,
+				"§aVanilla Trail",
+				"§7Select the Vanilla Trail.",
+				"§7This change is cosmetic.",
+				"",
+				"§cYou don't have this item!");
+		ItemStack HEARTS_NO = new CustomItem(trailManager.getProjectileTrailById("HEARTS").getIcon(), 1,
+				"§aHearts Trail",
+				"§7Select the Hearts Trail.",
+				"§7This change is cosmetic.",
+				"",
+				"§cYou don't have this item!");
+		ItemStack NOTES_NO = new CustomItem(trailManager.getProjectileTrailById("NOTES").getIcon(), 1,
+				"§aNotes Trail",
+				"§7Select the Notes Trail.",
+				"§7This change is cosmetic.",
+				"",
+				"§cYou don't have this item!");
+		ItemStack GREEN_STAR_NO = new CustomItem(trailManager.getProjectileTrailById("GREEN_STAR").getIcon(), 1,
+				"§aGreen Star Trail",
+				"§7Select the Green Star Trail.",
+				"§7This change is cosmetic.",
+				"",
+				"§cYou don't have this item!");
+
 		ItemStack close = new CustomItem(Material.BARRIER, 1, "§cClose");
+
+		ItemStack VANILLA = this.trailManager.hasProjectileTrail(p, "VANILLA") ? VANILLA_YES : VANILLA_NO;
+	    ItemStack HEARTS = this.trailManager.hasProjectileTrail(p, "HEARTS") ? HEARTS_YES : HEARTS_NO;
+	    ItemStack NOTES = this.trailManager.hasProjectileTrail(p, "NOTES") ? NOTES_YES : NOTES_NO;
+	    ItemStack GREEN_STAR = this.trailManager.hasProjectileTrail(p, "NOTES") ? GREEN_STAR_YES : GREEN_STAR_NO;
+
 		inventory.setItem(11, VANILLA);
 		inventory.setItem(12, HEARTS);
 		inventory.setItem(13, unavailableItem("Black Smoke"));
@@ -76,7 +108,11 @@ public class GuiProjectileTrailSelector implements Listener {
 						p.closeInventory();
 					}
 					if (slot == 11) {
-						if (!trailManager.hasSelected(p, "VANILLA")) {
+						if (!this.trailManager.hasProjectileTrail(p, "VANILLA")) {
+							p.sendMessage("§cYou don't have this item!");
+				            p.playSound(p.getLocation(), Sound.ENDERMAN_TELEPORT, 1.0F, 0.5F);
+						}
+						else if (!trailManager.hasSelected(p, "VANILLA")) {
 							trailManager.setProjectileTrail(p, "VANILLA");
 							open(p);
 							p.playSound(p.getLocation(), Sound.NOTE_PLING, 1f, 2f);
@@ -88,7 +124,11 @@ public class GuiProjectileTrailSelector implements Listener {
 						return;
 					}
 					if (slot == 12) {
-						if (!trailManager.hasSelected(p, "HEARTS")) {
+						if (!this.trailManager.hasProjectileTrail(p, "HEARTS")) {
+							p.sendMessage("§cYou don't have this item!");
+				            p.playSound(p.getLocation(), Sound.ENDERMAN_TELEPORT, 1.0F, 0.5F);
+						}
+						else if (!trailManager.hasSelected(p, "HEARTS")) {
 							trailManager.setProjectileTrail(p, "HEARTS");
 							open(p);
 							p.playSound(p.getLocation(), Sound.NOTE_PLING, 1f, 2f);
@@ -100,7 +140,11 @@ public class GuiProjectileTrailSelector implements Listener {
 						return;
 					}
 					if (slot == 22) {
-						if (!trailManager.hasSelected(p, "NOTES")) {
+						if (!this.trailManager.hasProjectileTrail(p, "NOTES")) {
+							p.sendMessage("§cYou don't have this item!");
+				            p.playSound(p.getLocation(), Sound.ENDERMAN_TELEPORT, 1.0F, 0.5F);
+						}
+						else if (!trailManager.hasSelected(p, "NOTES")) {
 							trailManager.setProjectileTrail(p, "NOTES");
 							open(p);
 							p.playSound(p.getLocation(), Sound.NOTE_PLING, 1f, 2f);
@@ -112,7 +156,11 @@ public class GuiProjectileTrailSelector implements Listener {
 						return;
 					}
 					if (slot == 23) {
-						if (!trailManager.hasSelected(p, "GREEN_STAR")) {
+						if (!this.trailManager.hasProjectileTrail(p, "GREEN_STAR")) {
+							p.sendMessage("§cYou don't have this item!");
+				            p.playSound(p.getLocation(), Sound.ENDERMAN_TELEPORT, 1.0F, 0.5F);
+						}
+						else if (!trailManager.hasSelected(p, "GREEN_STAR")) {
 							trailManager.setProjectileTrail(p, "GREEN_STAR");
 							open(p);
 							p.playSound(p.getLocation(), Sound.NOTE_PLING, 1f, 2f);
